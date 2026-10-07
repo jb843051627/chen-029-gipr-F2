@@ -98,6 +98,54 @@ CREATE TABLE t_gipr_case_sign (
   CONSTRAINT uk_sign_case_signer UNIQUE (case_id, signer_no)
 );
 
+DROP TABLE IF EXISTS t_gipr_yield_rule;
+CREATE TABLE t_gipr_yield_rule (
+  id bigint NOT NULL PRIMARY KEY,
+  rule_code varchar(64),
+  rule_name varchar(128),
+  obj_kind varchar(32),
+  th1_max decimal(12,3),
+  th2_max decimal(12,3),
+  th3_max decimal(12,3),
+  unit_kind varchar(32),
+  eff_start datetime,
+  eff_end datetime,
+  priority int,
+  status int,
+  del_flag int DEFAULT 0,
+  create_by varchar(64),
+  create_time datetime,
+  update_by varchar(64),
+  update_time datetime,
+  remark varchar(500)
+);
+
+DROP TABLE IF EXISTS t_gipr_yield_verdict;
+CREATE TABLE t_gipr_yield_verdict (
+  id bigint NOT NULL PRIMARY KEY,
+  batch_no varchar(96) NOT NULL,
+  row_no int NOT NULL,
+  obj_kind varchar(32),
+  ask_year int,
+  measure_at datetime,
+  input_raw decimal(24,6),
+  input_unit varchar(32),
+  input_conv decimal(24,6),
+  rule_code varchar(64),
+  eff_start datetime,
+  level int,
+  need_second int DEFAULT 0,
+  applicable int DEFAULT 0,
+  message varchar(500),
+  del_flag int DEFAULT 0,
+  create_by varchar(64),
+  create_time datetime,
+  update_by varchar(64),
+  update_time datetime,
+  remark varchar(500),
+  CONSTRAINT uk_verdict_batch_row UNIQUE (batch_no, row_no)
+);
+
 INSERT INTO t_gipr_product_book (id, prod_no, prod_name, prod_kind, road_name, src_kind, status, del_flag)
 VALUES (0, 'GP00', '在册名录', '甲层', '浚浦水域', '国家局核准公告下发', 0, 0),
        (1, 'GP01', '已移出名录', '乙层', '西片坡地', '省里增补', 1, 0);

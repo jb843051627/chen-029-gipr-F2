@@ -21,6 +21,17 @@ fuce:
   roll-verification: false
   # 文件路径 示例（ Windows配置D:/v2/uploadPath，Linux配置 /home/v2/uploadPath）
   profile: D:/v2/uploadPath
+#gipr 贴线定数：全系统只此一处，别处不得自立
+gipr:
+  yield:
+    #一公顷合十五亩（定数）
+    mu-per-hectare: 15
+    #一吨合一千公斤（定数）
+    kg-per-ton: 1000
+    #单位两式换齐后小数取齐到这一位（四舍五入）
+    scale: 3
+    #实测值大得没边的界线（达到即不合），负数或越此线的不进落线
+    input-max: 1000000
 #tomcat config
 server :
   port : 8080

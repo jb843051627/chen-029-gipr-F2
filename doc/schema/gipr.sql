@@ -202,6 +202,32 @@ CREATE TABLE IF NOT EXISTS t_gipr_yield_rule (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='核定产量与特色指标换算贴线档';
 
+CREATE TABLE IF NOT EXISTS t_gipr_yield_verdict (
+  id bigint NOT NULL COMMENT '主键',
+  batch_no varchar(96) NOT NULL COMMENT '同一批的幂等键（并着贴两回重取不重建）',
+  row_no int NOT NULL COMMENT '批内行次（从1起）',
+  obj_kind varchar(32) DEFAULT NULL COMMENT '所问品类（种植类/水产类/初加工类）',
+  ask_year int DEFAULT NULL COMMENT '所问年度（回头复算那一年的）',
+  measure_at datetime DEFAULT NULL COMMENT '实测那一刻',
+  input_raw decimal(24,6) DEFAULT NULL COMMENT '实测值原样（未换齐；大得没边到放不下的留空，数在 message 里指名）',
+  input_unit varchar(32) DEFAULT NULL COMMENT '实测值带来的单位口径',
+  input_conv decimal(24,6) DEFAULT NULL COMMENT '换齐到线面口径后的数（同口径即原样）',
+  rule_code varchar(64) DEFAULT NULL COMMENT '钉进这行的线代号（与求值当场返回字字相同）',
+  eff_start datetime DEFAULT NULL COMMENT '钉进这行的启用那一一日（与求值当场返回字字相同）',
+  level int DEFAULT NULL COMMENT '落进哪一段 1..4（挑不出/数不合为0）',
+  need_second int DEFAULT '0' COMMENT '该不该起第二张 0不起 1起（超封顶那一段才起）',
+  applicable int DEFAULT '0' COMMENT '这一刻采信得上吗 0挑不出 1采信',
+  message varchar(500) DEFAULT NULL COMMENT '那句明白话（挑不出/数不合时指名哪个数、按哪条规矩不合）',
+  del_flag int DEFAULT '0' COMMENT '删除标记 0正常 1删除',
+  create_by varchar(64) DEFAULT NULL COMMENT '创建者',
+  create_time datetime DEFAULT NULL COMMENT '创建时间',
+  update_by varchar(64) DEFAULT NULL COMMENT '更新者',
+  update_time datetime DEFAULT NULL COMMENT '更新时间',
+  remark varchar(500) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (id),
+  UNIQUE KEY uk_verdict_batch_row (batch_no, row_no)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='核定产量贴线落档留痕（只追加，不追溯重算）';
+
 -- 初始档案数据（id=1 启用 / id=2 停用）
 -- 名录产品预置两条：prod id=0 在册、id=1 已移出，供「挂靠企业是否仍在册」与
 -- 「已移出那一段不再收新行」两类业务判定取用。
