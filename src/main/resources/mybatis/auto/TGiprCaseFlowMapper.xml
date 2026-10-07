@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fc.v2.mapper.auto.TGiprCaseFlowMapper">
+
+    <!-- 取件并上行锁：同一条件的动作排队走，后到的不被挤掉 -->
+    <select id="selectByIdForUpdate" parameterType="java.lang.Long" resultType="com.fc.v2.model.auto.TGiprCaseFlow">
+        select * from t_gipr_case_flow where id = #{id} for update
+    </select>
+
+    <!-- 按企业取命名锁：同企业并发起件排队，不并成一笔，也不挤掉后到的 -->
+    <select id="selectGetLock" resultType="java.lang.Integer">
+        select get_lock(#{name}, #{timeout})
+    </select>
+
+    <select id="selectReleaseLock" resultType="java.lang.Integer">
+        select release_lock(#{name})
+    </select>
+
+</mapper>
