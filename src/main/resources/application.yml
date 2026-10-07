@@ -21,6 +21,17 @@ fuce:
   roll-verification: false
   # 文件路径 示例（ Windows配置D:/v2/uploadPath，Linux配置 /home/v2/uploadPath）
   profile: D:/v2/uploadPath
+# 核定产量与特色指标贴线求值的一处定数（换算口径、取齐位、量程只准这里定，各处不许自定）
+gipr:
+  yield:
+    # 一公顷合十五亩（定数）
+    mu-per-hectare: 15
+    # 一吨合一千公斤（定数）
+    kg-per-ton: 1000
+    # 换算后小数取齐到第几位（随库 decimal(12,3) 口径定 3 位）
+    value-scale: 3
+    # 实测值折成「每亩公斤」后的量程上限，过此数叫「大得没边」，不进落线
+    max-value-kg-per-mu: 999999.999
 #tomcat config
 server :
   port : 8080
